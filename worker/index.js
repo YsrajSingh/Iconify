@@ -290,16 +290,20 @@ export default {
       }
 
       if (logoUrl) {
-        const response = Response.json({
+        const responseData = {
           domain,
           url: logoUrl,
           source: usedSource
-        }, { headers: corsHeaders });
+        };
 
-        // Cache successful responses
-        const cacheResponse = new Response(response.body, response);
-        cacheResponse.headers.set('Cache-Control', `public, max-age=${CACHE_TTL}`);
-        ctx.waitUntil(cache.put(cacheKey, cacheResponse.clone()));
+        // Create response for client
+        const response = Response.json(responseData, { headers: corsHeaders });
+
+        // Cache successful responses - create separate response for caching
+        const cacheHeaders = new Headers(corsHeaders);
+        cacheHeaders.set('Cache-Control', `public, max-age=${CACHE_TTL}`);
+        const cacheResponse = Response.json(responseData, { headers: cacheHeaders });
+        ctx.waitUntil(cache.put(cacheKey, cacheResponse));
 
         return response;
       }
