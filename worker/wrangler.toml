@@ -1,0 +1,23 @@
+# Cloudflare Worker configuration
+name = "logo-fetcher"
+main = "index.js"
+compatibility_date = "2024-01-01"
+
+# Environment variables (set via wrangler secret or dashboard)
+# LOGODEV_API_KEY - Optional API key for logo.dev
+# BRANDFETCH_API_KEY - Optional API key for Brandfetch
+
+[vars]
+# Public environment variables (non-sensitive)
+
+# Development settings
+[env.development]
+name = "logo-fetcher-dev"
+
+# Production settings
+[env.production]
+name = "logo-fetcher"
+routes = [
+  # Add your custom domain route here
+  # { pattern = "logos.yourdomain.com/*", zone_name = "yourdomain.com" }
+]
